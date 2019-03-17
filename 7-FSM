@@ -1,0 +1,221 @@
+#include <iostream>
+#include <string>
+#include <set>
+#include <stdio.h>
+using namespace std;
+
+/*
+Обозначения:
+I – имя переменной;
+D – целое десятичное число;
+DF – дробное десятичное число
+        DZ – десятичное число со знаком
+B – имя процедуры (функции)
+_ - пробел
+| - альтернатива (может применяться либо одна, либо другая конструкции)
+[ ] – языковая конструкция может не присутствовать или присутствовать
+        только один раз. ( ) – группировка различных операций в выражении,
+            описывающем синтаксис языка
+*/
+
+bool FSM(char ch, int &S)// возвращает флаг ошибки, номер кейса
+{
+    switch(S)
+    {
+        case 0:
+            if((ch>='a' && ch<='z') || (ch>='A' && ch<='Z')) {
+                S=1;
+                return false;
+            }
+            S=0; //флаг ошибки, номер последнего пройденного
+            return true;
+        case 1:
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=1;
+                return false;
+            }
+            if(ch=='=') {
+                S=2;
+                return false;
+            }
+            S=1;
+            return true;
+        case 2:
+            if(ch=='t') {
+                S=7;
+                return false;
+            }
+            if(ch=='f') {
+                S=11;
+                return false;
+            }
+            if((ch>='a' && ch<='z') || (ch>='A' && ch<='Z')) {
+                S=3;
+                return false;
+            }
+            S=2;
+            return true;
+        case 3:
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;
+            }
+            if(ch=='=' || ch=='>') {
+                S=5;
+                return false;
+            }
+            if(ch=='<') {
+                S=4;
+                return false;
+            }
+            S=3;
+            return true;
+        case 4:
+            if(ch=='>') {
+                S=5;
+                return false;
+            }
+            if((ch>='a' && ch<='z') || (ch>='A' && ch<='Z')) {
+                S=6;
+                return false;
+            }
+            S=4;
+            return true;
+        case 5:
+            if((ch>='a' && ch<='z') || (ch>='A' && ch<='Z')) {S=6;
+            return false;
+            }
+            S=5;
+            return true;
+        case 6:
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=6;
+                return false;
+            }
+            if(ch==NULL) {
+                S=16;
+                return false;
+            }
+            S=6;
+            return true;
+        case 7:
+            if(ch=='r') {
+                S=8;
+                return false;
+            }
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;
+            }
+            S=7;
+            return true;
+        case 8:
+            if(ch=='u') {
+                S=9;
+                return false;
+            }
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;
+            }
+            S=8;
+            return true;
+        case 9:
+            if(ch=='e') {
+                S=10; return false;
+            }
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;
+            }
+            S=9;
+            return true;
+        case 10:
+            if(ch==NULL) {
+                S=16;
+                return false;
+            }
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;
+            }
+            S=10; return true;
+        case 11:
+            if(ch=='a') {
+                S=12;
+                return false;}
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;}
+            S=11;
+            return true;
+        case 12:
+            if(ch=='l') {
+                S=13;
+                return false;}
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;}
+            S=12;
+            return true;
+        case 13:
+            if(ch=='s') {
+                S=14;
+                return false;
+            }
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3; return false;
+            }
+            S=13;
+            return true;
+        case 14:
+            if(ch=='e') {
+                S=15;
+                return false;
+            }
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;
+            }
+            S=14;
+            return true;
+        case 15:
+            if(ch==NULL) {
+                S=16;
+                return false;
+            }
+            if((ch>='0' && ch<='9') || (ch>='a' && ch<='z') || (ch>='A' && ch<='Z') || ch=='_') {
+                S=3;
+                return false;
+            }
+            S=15;
+            return true;
+        case 16:
+            break;
+    }
+    return true;
+}
+
+
+int main()
+{
+    int S=0;
+    string str;
+    set<int> Final={16}; // Множество конечных состояний автомата
+    while(getline(cin, str), str!="")
+    {
+        for(auto i: str)
+            if(FSM(i,S)) //false - продолжаем, true - прерываем с ошибкой
+                break;
+
+        FSM(NULL,S);
+        cout<<"S = "<<S<<"; "; //последний пройденный
+
+        if(Final.count(S)) // Проверяем, находится ли автомат в конечном состоянии
+            cout<<"Yes\n";
+        else
+            cout<<"No\n";
+        S=0;
+    }
+    return 0;
+}
