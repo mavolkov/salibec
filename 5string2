@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <algorithm>
+using namespace std;
+
+/*
+Дан массив из N вещественных чисел. Поменять попарно элементы массива местами.
+ Найти сумму элементов массива, расположенных между первым по порядку минимальным и
+ последним по порядку максимальным элементами. Удалить из массива все элементы,
+ модуль которых находится в интервале [a,b].
+ Освободившиеся в массива элементы заполнить нулями.
+*/
+
+
+
+int main() {
+    int size = 20;
+    vector <float> myvector = {2.93, 4.0, 1.42, 12.0, -6.1, 9.51, 0.0, -6.1, 12.0, 7.04, 5.95, 12.0};
+
+
+
+
+    cout<<"\nДо:\n";
+    for (auto it = myvector.begin(); it < myvector.end(); it++){
+        cout<< *it << "  ";
+    }
+
+    //меняем местами
+    for (int i = 0; i<myvector.size(); i+=2){
+            float temp = myvector[i];
+            myvector[i] = myvector[i+1];
+            myvector[i+1] = temp;
+    }
+
+    cout<<"\nПоменяли местами:\n";
+    for (auto it = myvector.begin(); it < myvector.end(); it++){
+        cout<< *it << "  ";
+    }
+    cout<<endl;
+
+    float max = -999;  //поиск максимального
+    int id_max = -1;
+    for (int i = 0; i<myvector.size(); i++){
+        if (max < myvector[i] || max == myvector[i]){
+            max = myvector[i];
+            id_max = i;
+        }
+        //cout<<"id - "<<i<< " ";
+    }
+    cout<<"\n\nМаксмальный последний = "<< myvector[id_max] << ", его id = "<< id_max <<"\n";
+
+
+    float min = 999;  //поиск минимальный
+    int id_min = -1;
+    for (int i = 0; i<myvector.size(); i++){
+        if (min > myvector[i]){
+            min = myvector[i];
+            id_min = i;
+            //cout<<"id - "<<i<< " ";
+        }
+    }
+    cout<<"Минимальный первый = "<< myvector[id_min] << ", его id = "<< id_min <<"\n";
+
+    //вывод id чисел
+    cout<<endl;
+    for (int i = 0; i<myvector.size(); i++){
+        cout << i << " = " << myvector[i] << ", ";
+    } cout<<endl;
+
+
+    cout<<"\nСуммируем элементы: ";
+    float summa = 0;
+    if (id_max > id_min)
+        for (int i = id_min; i < id_max; i++){
+            summa += myvector[i];
+            cout << myvector[i] << ", ";
+        }
+    cout<<"\nСумма элементов между первым минимальным и последним максимальным: = "<< summa << "\n";
+
+
+    cout<<"\nВведите начало интервала: ";
+    int nach = 0;
+    cin >> nach;
+    cout<<"\nВведите конец интервала: ";
+    int kon = 0;
+    cin >> kon;
+
+
+    cout<<"До заполнения:\n";
+    for (auto it = myvector.begin(); it<myvector.end(); it++){
+        cout<<*it<<", ";
+    }
+
+    cout<<"\nЗаполнили нулями в инт. [" << nach << "," << kon << "]:\n";
+    for (auto it = myvector.begin(); it<myvector.end(); it++){
+        if(*it >= nach  && *it <= kon)
+            cout<<0<< "  ";
+        else
+            cout<<*it<< "  ";
+    }
+}
